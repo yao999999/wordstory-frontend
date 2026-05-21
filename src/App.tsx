@@ -455,6 +455,89 @@ function App() {
     }
   }
 
+  // ==================== 账号系统 ====================
+  const [loggedInUser, setLoggedInUser] = useState<string | null>(() => localStorage.getItem('ws_username'))
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
+  const [authUsername, setAuthUsername] = useState('')
+  const [authPassword, setAuthPassword] = useState('')
+  const [authError, setAuthError] = useState('')
+  const [authLoading, setAuthLoading] = useState(false)
+  const [showBindHint, setShowBindHint] = useState(false) // 支付成功后提示绑定
+
+  // 支付成功后检查是否需要提示绑定
+  useEffect(() => {
+    if (paymentResult === 'success' && !loggedInUser && isMember) {
+      setShowBindHint(true)
+    }
+  }, [paymentResult, loggedInUser, isMember])
+
+  // 登录
+  const handleLogin = async () => {
+    setAuthError('')
+    setAuthLoading(true)
+    try {
+      const res = await fetch(`${API}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: authUsername, password: authPassword }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        localStorage.setItem('ws_username', data.username)
+        setLoggedInUser(data.username)
+        setShowAuthModal(false)
+        setAuthUsername('')
+        setAuthPassword('')
+        // 恢复会员状态
+        if (data.isMember) {
+          setIsMember(true)
+          setMemberExpiry(data.memberExpiry)
+          setMemberPlan(data.memberPlan)
+        }
+      } else {
+        setAuthError(data.message || '登录失败')
+      }
+    } catch (e) {
+      setAuthError('网络错误')
+    }
+    setAuthLoading(false)
+  }
+
+  // 注册
+  const handleRegister = async () => {
+    setAuthError('')
+    setAuthLoading(true)
+    try {
+      const res = await fetch(`${API}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: authUsername, password: authPassword, deviceId }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        localStorage.setItem('ws_username', data.username)
+        setLoggedInUser(data.username)
+        setShowAuthModal(false)
+        setShowBindHint(false)
+        setAuthUsername('')
+        setAuthPassword('')
+      } else {
+        setAuthError(data.message || '注册失败')
+      }
+    } catch (e) {
+      setAuthError('网络错误')
+    }
+    setAuthLoading(false)
+  }
+
+  // 退出登录
+  const handleLogout = () => {
+    localStorage.removeItem('ws_username')
+    setLoggedInUser(null)
+    fetchMemberStatus()
+  }
+
   // ==================== 功能3: 每日一词 ====================
   const [dailyWord, setDailyWord] = useState<DailyWord | null>(null)
   const [dailyWordFlipped, setDailyWordFlipped] = useState(false)
@@ -2445,6 +2528,78 @@ function App() {
           <p>支付由虎皮椒提供技术支持，资金安全有保障</p>
           <p>如有问题请联系客服</p>
         </div>
+
+        {/* 账号区域 */}
+        {loggedInUser ? (
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-lg">👤</div>
+                <div>
+                  <div className="text-sm font-bold text-gray-900 dark:text-white">{loggedInUser}</div>
+                  <div className="text-xs text-gray-400">已登录 · 换设备可恢复会员</div>
+                </div>
+              </div>
+              <button onClick={handleLogout} className="text-xs text-gray-400 hover:text-red-500 transition-colors px-3 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                退出登录
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm font-medium text-gray-900 dark:text-white">已有账号？</div>
+                <div className="text-xs text-gray-400">登录后换设备也能找回会员</div>
+              </div>
+              <button onClick={() => { setAuthMode('login'); setShowAuthModal(true); }} className="px-4 py-2 bg-indigo-500 text-white text-sm rounded-xl hover:bg-indigo-600 transition-colors">
+                登录
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* 绑定账号提示弹窗 */}
+        {showBindHint && !loggedInUser && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowBindHint(false)}>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+              <div className="text-center">
+                <div className="text-4xl mb-3">🔐</div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">设置账号密码</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">设置后换手机也能找回会员，建议现在就绑定</p>
+                <div className="space-y-3 mb-4">
+                  <input
+                    type="text"
+                    placeholder="设置用户名（2-20个字符）"
+                    value={authUsername}
+                    onChange={e => setAuthUsername(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <input
+                    type="password"
+                    placeholder="设置密码（4-32个字符）"
+                    value={authPassword}
+                    onChange={e => setAuthPassword(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  {authError && <p className="text-xs text-red-500">{authError}</p>}
+                </div>
+                <div className="flex gap-3">
+                  <button onClick={() => setShowBindHint(false)} className="flex-1 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    以后再说
+                  </button>
+                  <button
+                    onClick={handleRegister}
+                    disabled={!authUsername || !authPassword || authLoading}
+                    className="flex-1 py-2.5 bg-indigo-500 text-white rounded-xl text-sm font-medium hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {authLoading ? '...' : '立即绑定'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -3007,6 +3162,52 @@ function App() {
       )}
 
       <footer className="text-center py-6 text-xs text-gray-400 dark:text-gray-600 pb-20">WordStory - 让背单词变得有趣</footer>
+
+      {/* 登录/注册弹窗 */}
+      {showAuthModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => { setShowAuthModal(false); setAuthError(''); }}>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">{authMode === 'login' ? '登录账号' : '注册账号'}</h3>
+              <button onClick={() => { setShowAuthModal(false); setAuthError(''); }} className="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+            </div>
+            <div className="space-y-3 mb-4">
+              <input
+                type="text"
+                placeholder="用户名"
+                value={authUsername}
+                onChange={e => { setAuthUsername(e.target.value); setAuthError(''); }}
+                className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <input
+                type="password"
+                placeholder="密码"
+                value={authPassword}
+                onChange={e => { setAuthPassword(e.target.value); setAuthError(''); }}
+                onKeyDown={e => { if (e.key === 'Enter') { authMode === 'login' ? handleLogin() : handleRegister() } }}
+                className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {authError && <p className="text-xs text-red-500">{authError}</p>}
+            </div>
+            <button
+              onClick={authMode === 'login' ? handleLogin : handleRegister}
+              disabled={!authUsername || !authPassword || authLoading}
+              className="w-full py-3 bg-indigo-500 text-white rounded-xl text-sm font-bold hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {authLoading ? '请稍候...' : authMode === 'login' ? '登录' : '注册'}
+            </button>
+            <p className="text-center text-xs text-gray-400 mt-4">
+              {authMode === 'login' ? '还没有账号？' : '已有账号？'}
+              <button
+                onClick={() => { setAuthMode(authMode === 'login' ? 'register' : 'login'); setAuthError(''); }}
+                className="text-indigo-500 hover:text-indigo-600 ml-1"
+              >
+                {authMode === 'login' ? '立即注册' : '去登录'}
+              </button>
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
