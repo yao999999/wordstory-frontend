@@ -424,11 +424,13 @@ function App() {
   }, [])
 
   // 检查是否可以继续使用（非会员每天3次）
+  // 免费体验期间：不限制使用次数
   const canUseFeature = useCallback(() => {
-    if (isMember) return true
-    const count = getTodayUsageCount()
-    return count < 3
-  }, [isMember, getTodayUsageCount])
+    return true // 暂时取消限制，免费体验
+    // if (isMember) return true
+    // const count = getTodayUsageCount()
+    // return count < 3
+  }, [])
 
   // 初始化
   useEffect(() => {
@@ -2618,6 +2620,7 @@ function App() {
               <h2 className="text-xl font-bold">我的学习</h2>
               <p className="text-white/70 text-sm">坚持每天学习，积少成多</p>
             </div>
+            {/* 暂时隐藏付费入口
             <button
               onClick={() => setActiveTab('membership')}
               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
@@ -2628,6 +2631,7 @@ function App() {
             >
               {isMember ? '👑 VIP会员' : '开通会员'}
             </button>
+            */}
           </div>
         </div>
 
@@ -3144,7 +3148,7 @@ function App() {
               { key: 'home' as TabType, icon: '🏠', label: '首页' },
               { key: 'wordbank' as TabType, icon: '📚', label: '词库' },
               { key: 'quiz' as TabType, icon: '🧪', label: '测验' },
-              { key: 'membership' as TabType, icon: '👑', label: '会员' },
+              // { key: 'membership' as TabType, icon: '👑', label: '会员' }, // 暂时隐藏付费
               { key: 'profile' as TabType, icon: '📊', label: '我的' },
               { key: 'settings' as TabType, icon: '⚙️', label: '设置' },
             ]).map(tab => (
