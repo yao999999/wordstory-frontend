@@ -1394,8 +1394,8 @@ function App() {
               {/* 单词头部 */}
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-black text-gray-900 dark:text-gray-100">{card.index}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="w-9 h-9 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-2xl text-gray-900 dark:text-gray-100 font-black flex-shrink-0">{card.index}.</span>
                     <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">{card.word}</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">{card.phonetic}</span>
                   </div>
@@ -2597,7 +2597,7 @@ function App() {
                     {streamingWords.map((item) => (
                       <div key={item.index} className="word-fade-in bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center text-lg text-gray-900 dark:text-gray-100 font-black">{item.index}</span>
+                          <span className="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center text-lg text-gray-900 dark:text-gray-100 font-black">{item.index}.</span>
                           <span className="font-bold text-gray-900 dark:text-white">{item.word}</span>
                           <span className="text-sm text-gray-400 dark:text-gray-500 font-mono">{item.phonetic}</span>
                           <span className="text-xs px-2 py-0.5 bg-purple-50 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300 rounded-full">{item.pos}</span>
@@ -2666,7 +2666,7 @@ function App() {
                         {isSelected && <span className="text-white text-xs">✓</span>}
                       </button>
                       <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-gray-900 dark:text-gray-100 font-black text-lg">{item.index}</span>
+                        <span className="text-gray-900 dark:text-gray-100 font-black text-lg">{item.index}.</span>
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
