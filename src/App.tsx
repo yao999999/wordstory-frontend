@@ -363,8 +363,97 @@ function App() {
   const toggleDarkMode = () => setDarkMode(prev => !prev)
 
   // ==================== 功能2: 底部导航栏 ====================
-  type TabType = 'home' | 'wordbank' | 'quiz' | 'profile' | 'settings'
+  type TabType = 'home' | 'wordbank' | 'quiz' | 'profile' | 'membership' | 'settings'
   const [activeTab, setActiveTab] = useState<TabType>('home')
+
+  // ==================== 会员系统 ====================
+  const [deviceId] = useState(() => {
+    let id = localStorage.getItem('ws_device_id')
+    if (!id) {
+      id = 'WS_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 10)
+      localStorage.setItem('ws_device_id', id)
+    }
+    return id
+  })
+  const [isMember, setIsMember] = useState(false)
+  const [memberExpiry, setMemberExpiry] = useState<string | null>(null)
+  const [memberPlan, setMemberPlan] = useState<string | null>(null)
+  const [dailyUsageCount, setDailyUsageCount] = useState(0)
+  const [paymentResult, setPaymentResult] = useState<string | null>(null)
+
+  // 检查支付结果（URL参数）
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const payment = params.get('payment')
+    if (payment) {
+      setPaymentResult(payment)
+      // 清除URL参数
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+  }, [])
+
+  // 查询会员状态
+  const fetchMemberStatus = useCallback(async () => {
+    try {
+      const res = await fetch(`${API}/api/membership/status?device_id=${deviceId}`)
+      const data = await res.json()
+      if (data.success) {
+        setIsMember(data.isMember)
+        setMemberExpiry(data.expiryDate)
+        setMemberPlan(data.plan)
+      }
+    } catch (e) {
+      console.error('查询会员状态失败:', e)
+    }
+  }, [API, deviceId])
+
+  // 获取今日使用次数
+  const getTodayUsageCount = useCallback(() => {
+    const today = new Date().toDateString()
+    const usage = JSON.parse(localStorage.getItem('ws_daily_usage') || '{}')
+    return usage[today] || 0
+  }, [])
+
+  // 增加今日使用次数
+  const incrementUsage = useCallback(() => {
+    const today = new Date().toDateString()
+    const usage = JSON.parse(localStorage.getItem('ws_daily_usage') || '{}')
+    usage[today] = (usage[today] || 0) + 1
+    localStorage.setItem('ws_daily_usage', JSON.stringify(usage))
+    setDailyUsageCount(usage[today])
+  }, [])
+
+  // 检查是否可以继续使用（非会员每天3次）
+  const canUseFeature = useCallback(() => {
+    if (isMember) return true
+    const count = getTodayUsageCount()
+    return count < 3
+  }, [isMember, getTodayUsageCount])
+
+  // 初始化
+  useEffect(() => {
+    fetchMemberStatus()
+    setDailyUsageCount(getTodayUsageCount())
+  }, [fetchMemberStatus, getTodayUsageCount])
+
+  // 购买会员
+  const handlePurchase = async (planId: string) => {
+    try {
+      const res = await fetch(`${API}/api/membership/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planId, deviceId }),
+      })
+      const data = await res.json()
+      if (data.success && data.payUrl) {
+        window.location.href = data.payUrl
+      } else {
+        alert(data.message || '创建订单失败')
+      }
+    } catch (e) {
+      alert('网络错误，请重试')
+    }
+  }
 
   // ==================== 功能3: 每日一词 ====================
   const [dailyWord, setDailyWord] = useState<DailyWord | null>(null)
@@ -2230,6 +2319,136 @@ function App() {
     </div>
   )
 
+  // ==================== 渲染：会员页面 ====================
+  const renderMembership = () => {
+    const plans = [
+      { id: 'monthly', name: '包月会员', price: 19.9, originalPrice: 19.9, days: 30, desc: '适合体验用户', color: 'from-blue-500 to-cyan-500', badge: '' },
+      { id: 'quarterly', name: '包季会员', price: 29.9, originalPrice: 59.7, days: 90, desc: '最受欢迎', color: 'from-purple-500 to-pink-500', badge: '🔥 热销' },
+      { id: 'semiannual', name: '半年会员', price: 39.9, originalPrice: 119.4, days: 180, desc: '超值之选', color: 'from-orange-500 to-red-500', badge: '💰 超值' },
+      { id: 'yearly', name: '包年会员', price: 69.9, originalPrice: 238.8, days: 365, desc: '最划算', color: 'from-amber-500 to-yellow-500', badge: '👑 推荐' },
+    ]
+
+    return (
+      <div className="animate-fadeIn space-y-6 pb-4">
+        {/* 支付结果提示 */}
+        {paymentResult && (
+          <div className={`rounded-xl p-4 ${paymentResult === 'success'
+            ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800'
+            : 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800'
+          }`}>
+            <p className={`text-sm font-medium ${paymentResult === 'success' ? 'text-green-700 dark:text-green-400' : 'text-yellow-700 dark:text-yellow-400'}`}>
+              {paymentResult === 'success' ? '🎉 支付成功！会员已激活，感谢你的支持！' : '⏳ 订单已创建，等待支付确认...'}
+            </p>
+            {paymentResult === 'success' && (
+              <button onClick={() => { setPaymentResult(null); fetchMemberStatus(); }} className="mt-2 text-xs text-green-600 dark:text-green-400 underline">关闭</button>
+            )}
+          </div>
+        )}
+
+        {/* 会员状态卡片 */}
+        <div className={`rounded-2xl p-6 text-white shadow-xl ${isMember
+          ? 'bg-gradient-to-r from-amber-500 to-orange-500'
+          : 'bg-gradient-to-r from-gray-500 to-gray-600'
+        }`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="text-3xl">{isMember ? '👑' : '🔒'}</div>
+              <div>
+                <h2 className="text-lg font-bold">{isMember ? '会员用户' : '免费用户'}</h2>
+                {isMember && memberExpiry ? (
+                  <p className="text-white/80 text-sm">到期时间：{new Date(memberExpiry).toLocaleDateString('zh-CN')}</p>
+                ) : (
+                  <p className="text-white/80 text-sm">今日剩余 {Math.max(0, 3 - dailyUsageCount)} 次免费体验</p>
+                )}
+              </div>
+            </div>
+            {isMember && (
+              <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium">VIP</span>
+            )}
+          </div>
+        </div>
+
+        {/* 会员权益 */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+          <h3 className="font-bold text-gray-900 dark:text-white mb-3">✨ 会员权益</h3>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { icon: '♾️', title: '无限生成', desc: '不限次数生成故事' },
+              { icon: '📚', title: '全部词库', desc: '解锁所有词库内容' },
+              { icon: '🎯', title: '高级测验', desc: '专属测验模式' },
+              { icon: '🚫', title: '无广告', desc: '纯净学习体验' },
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-2 p-2">
+                <span className="text-lg">{item.icon}</span>
+                <div>
+                  <div className="text-sm font-medium text-gray-900 dark:text-white">{item.title}</div>
+                  <div className="text-xs text-gray-400">{item.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 套餐选择 */}
+        <div>
+          <h3 className="font-bold text-gray-900 dark:text-white mb-3">💎 选择套餐</h3>
+          <div className="space-y-3">
+            {plans.map(plan => {
+              const discount = Math.round((1 - plan.price / plan.originalPrice) * 100)
+              return (
+                <div key={plan.id} className={`relative bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border-2 transition-all hover:shadow-md ${
+                  memberPlan === plan.id
+                    ? 'border-amber-400 dark:border-amber-500'
+                    : 'border-gray-100 dark:border-gray-700'
+                }`}>
+                  {plan.badge && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-medium">{plan.badge}</span>
+                  )}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-12 h-12 bg-gradient-to-br ${plan.color} rounded-xl flex items-center justify-center text-white text-lg font-bold`}>
+                        {plan.days >= 365 ? '年' : plan.days >= 180 ? '半' : plan.days >= 90 ? '季' : '月'}
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-900 dark:text-white">{plan.name}</h4>
+                        <p className="text-xs text-gray-400">{plan.desc} · {plan.days}天</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-2xl font-black text-red-500">¥{plan.price}</span>
+                      </div>
+                      {discount > 0 && (
+                        <p className="text-xs text-gray-400 line-through">¥{plan.originalPrice}</p>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handlePurchase(plan.id)}
+                    className={`w-full mt-3 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                      memberPlan === plan.id
+                        ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 cursor-default'
+                        : `bg-gradient-to-r ${plan.color} text-white hover:opacity-90 active:scale-[0.98]`
+                    }`}
+                    disabled={memberPlan === plan.id}
+                  >
+                    {memberPlan === plan.id ? '✓ 当前套餐' : `立即开通 · ¥${plan.price}`}
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* 说明 */}
+        <div className="text-center text-xs text-gray-400 dark:text-gray-500 space-y-1 pb-4">
+          <p>支付由虎皮椒提供技术支持，资金安全有保障</p>
+          <p>如有问题请联系客服</p>
+        </div>
+      </div>
+    )
+  }
+
   // ==================== 渲染：我的页面（仪表盘） ====================
   const renderProfile = () => {
     const maxWeekCount = stats?.weekData?.length ? Math.max(...stats.weekData.map(d => d.count), 1) : 1
@@ -2240,10 +2459,20 @@ function App() {
         <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-xl">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-3xl">📚</div>
-            <div>
+            <div className="flex-1">
               <h2 className="text-xl font-bold">我的学习</h2>
               <p className="text-white/70 text-sm">坚持每天学习，积少成多</p>
             </div>
+            <button
+              onClick={() => setActiveTab('membership')}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                isMember
+                  ? 'bg-amber-400 text-amber-900'
+                  : 'bg-white/20 text-white hover:bg-white/30'
+              }`}
+            >
+              {isMember ? '👑 VIP会员' : '开通会员'}
+            </button>
           </div>
         </div>
 
@@ -2746,6 +2975,7 @@ function App() {
             {activeTab === 'wordbank' && renderWordbank()}
             {activeTab === 'quiz' && renderQuiz()}
             {activeTab === 'profile' && renderProfile()}
+            {activeTab === 'membership' && renderMembership()}
             {activeTab === 'settings' && renderSettings()}
           </>
         )}
@@ -2759,6 +2989,7 @@ function App() {
               { key: 'home' as TabType, icon: '🏠', label: '首页' },
               { key: 'wordbank' as TabType, icon: '📚', label: '词库' },
               { key: 'quiz' as TabType, icon: '🧪', label: '测验' },
+              { key: 'membership' as TabType, icon: '👑', label: '会员' },
               { key: 'profile' as TabType, icon: '📊', label: '我的' },
               { key: 'settings' as TabType, icon: '⚙️', label: '设置' },
             ]).map(tab => (
