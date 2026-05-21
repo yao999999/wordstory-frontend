@@ -1395,7 +1395,7 @@ function App() {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-xs text-gray-400 dark:text-gray-500">NO.{card.index}</span>
+                    <span className="text-base font-extrabold text-amber-500 dark:text-amber-400 drop-shadow-sm" style={{ textShadow: '0 0 8px rgba(245,158,11,0.3)' }}>{card.index}</span>
                     <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">{card.word}</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">{card.phonetic}</span>
                   </div>
@@ -1439,33 +1439,43 @@ function App() {
                 )}
               </div>
               
-              {/* 详细信息：全部词义、词根记忆、词形变化 */}
+              {/* 详细信息：全部词义、词根记忆、词形变化 - 默认折叠 */}
               {hasDetail && (
-                <div className="mt-3 space-y-2">
-                  {card.allMeanings && (
-                    <div>
-                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400">📖 全部词义</span>
-                      <div className="bg-blue-50/60 dark:bg-blue-900/20 rounded-lg p-2 mt-1">
-                        {card.allMeanings.split(/[；;]/).filter(Boolean).map((m, i) => (
-                          <p key={i} className="text-xs text-gray-700 dark:text-gray-300 py-0.5">{m.trim()}</p>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {card.etymology && (
-                    <div>
-                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400">🧩 词根记忆</span>
-                      <div className="bg-amber-50/60 dark:bg-amber-900/20 rounded-lg p-2 mt-1">
-                        <p className="text-xs text-gray-700 dark:text-gray-300">{card.etymology}</p>
-                      </div>
-                    </div>
-                  )}
-                  {card.derivatives && (
-                    <div>
-                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400">🔄 词形变化</span>
-                      <div className="bg-green-50/60 dark:bg-green-900/20 rounded-lg p-2 mt-1">
-                        <p className="text-xs text-gray-700 dark:text-gray-300">{card.derivatives}</p>
-                      </div>
+                <div className="mt-3">
+                  <button
+                    onClick={() => toggleWordExpand(wordKey)}
+                    className="w-full flex items-center justify-center gap-1 py-2 text-xs text-indigo-500 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors"
+                  >
+                    {isExpanded ? '▲ 收起详情' : '▼ 展开详情（词义/词根/词形变化）'}
+                  </button>
+                  {isExpanded && (
+                    <div className="mt-2 space-y-2">
+                      {card.allMeanings && (
+                        <div>
+                          <span className="text-xs font-medium text-gray-500 dark:text-gray-400">📖 全部词义</span>
+                          <div className="bg-blue-50/60 dark:bg-blue-900/20 rounded-lg p-2 mt-1">
+                            {card.allMeanings.split(/[；;]/).filter(Boolean).map((m, i) => (
+                              <p key={i} className="text-xs text-gray-700 dark:text-gray-300 py-0.5">{m.trim()}</p>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {card.etymology && (
+                        <div>
+                          <span className="text-xs font-medium text-gray-500 dark:text-gray-400">🧩 词根记忆</span>
+                          <div className="bg-amber-50/60 dark:bg-amber-900/20 rounded-lg p-2 mt-1">
+                            <p className="text-xs text-gray-700 dark:text-gray-300">{card.etymology}</p>
+                          </div>
+                        </div>
+                      )}
+                      {card.derivatives && (
+                        <div>
+                          <span className="text-xs font-medium text-gray-500 dark:text-gray-400">🔄 词形变化</span>
+                          <div className="bg-green-50/60 dark:bg-green-900/20 rounded-lg p-2 mt-1">
+                            <p className="text-xs text-gray-700 dark:text-gray-300">{card.derivatives}</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -2587,7 +2597,7 @@ function App() {
                     {streamingWords.map((item) => (
                       <div key={item.index} className="word-fade-in bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="w-6 h-6 bg-indigo-100 dark:bg-indigo-900/40 rounded flex items-center justify-center text-xs text-indigo-600 dark:text-indigo-400 font-bold">{item.index}</span>
+                          <span className="w-7 h-7 bg-amber-100 dark:bg-amber-900/40 rounded-lg flex items-center justify-center text-sm text-amber-600 dark:text-amber-400 font-extrabold" style={{ textShadow: '0 0 6px rgba(245,158,11,0.3)' }}>{item.index}</span>
                           <span className="font-bold text-gray-900 dark:text-white">{item.word}</span>
                           <span className="text-sm text-gray-400 dark:text-gray-500 font-mono">{item.phonetic}</span>
                           <span className="text-xs px-2 py-0.5 bg-purple-50 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300 rounded-full">{item.pos}</span>
@@ -2655,8 +2665,8 @@ function App() {
                       >
                         {isSelected && <span className="text-white text-xs">✓</span>}
                       </button>
-                      <div className="w-8 h-8 bg-indigo-50 dark:bg-indigo-900/40 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-indigo-600 dark:text-indigo-400 font-bold text-sm">{item.index}</span>
+                      <div className="w-9 h-9 bg-amber-50 dark:bg-amber-900/40 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-amber-600 dark:text-amber-400 font-extrabold text-base" style={{ textShadow: '0 0 6px rgba(245,158,11,0.3)' }}>{item.index}</span>
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
