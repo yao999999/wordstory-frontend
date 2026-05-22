@@ -109,5 +109,46 @@ body {
 
 /* 底部导航安全区域 */
 .pb-safe {
-  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* v0.dev 风格升级 - 按钮点击反馈 */
+button:active {
+  transform: scale(0.98);
+}
+
+/* 平滑滚动 */
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 输入框聚焦效果优化 */
+input:focus, textarea:focus {
+  outline: none;
+}
+
+/* 卡片悬浮效果 */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(99, 102, 241, 0.15), 0 4px 10px -5px rgba(99, 102, 241, 0.1);
+}
+.dark .hover-lift:hover {
+  box-shadow: 0 8px 25px -5px rgba(99, 102, 241, 0.25);
+}
+
+/* 渐变文字工具类 */
+.gradient-text {
+  background: linear-gradient(to right, #4f46e5, #9333ea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 安全区域底部间距更新 */
+.pb-safe {
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
 }

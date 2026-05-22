@@ -1776,20 +1776,30 @@ function App() {
     }
 
     return (
-      <div className="animate-fadeIn h-full flex flex-col bg-gradient-to-b from-pink-50 via-purple-50 to-indigo-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+      <div className="animate-fadeIn h-full flex flex-col bg-gray-50 dark:bg-gray-900">
         {/* 顶部标题栏 */}
-        <div className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-xl font-bold">WordStory</h1>
-              <p className="text-xs text-white/80">把单词串进你喜欢的故事里</p>
+        <div className="bg-white dark:bg-gray-900 px-5 pt-6 pb-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200 dark:shadow-indigo-900/30">
+                <span className="text-white text-lg">✨</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">WordStory</h1>
+                <p className="text-xs text-gray-500 dark:text-gray-400">把单词串进你喜欢的故事里</p>
+              </div>
             </div>
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors"
+              className="p-2.5 bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
               {darkMode ? '☀️' : '🌙'}
             </button>
+          </div>
+          {/* AI驱动学习徽章 */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 rounded-full border border-indigo-100 dark:border-indigo-800/50">
+            <span className="text-xs">✨</span>
+            <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400">AI 驱动学习</span>
           </div>
         </div>
 
@@ -1798,10 +1808,9 @@ function App() {
           {storyWords.length === 0 && !storyLoading ? (
             // 选择引导界面
             <div className="h-full overflow-y-auto px-6 py-6 pb-24">
-              <div className="text-center mb-6">
-                <div className="text-5xl mb-3">📖💕📚</div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">剧情背单词</h2>
-                <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">剧情背单词</h2>
+                <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto text-sm">
                   选择单词来源，输入你喜欢的作品名，我们把单词串进故事里！
                 </p>
               </div>
@@ -1809,9 +1818,11 @@ function App() {
               <div className="w-full max-w-sm mx-auto space-y-4">
                 {/* 步骤1：选择单词来源 */}
                 <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-lg">1️⃣</span>
-                    <span className="font-medium text-gray-900 dark:text-white">选择单词来源</span>
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-6 h-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">1</span>
+                    </div>
+                    <span className="font-semibold text-gray-900 dark:text-white">选择单词来源</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <button
@@ -1933,9 +1944,11 @@ function App() {
                 
                 {/* 步骤2：输入作品信息 */}
                 <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-lg">2️⃣</span>
-                    <span className="font-medium text-gray-900 dark:text-white">输入作品信息</span>
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-6 h-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">2</span>
+                    </div>
+                    <span className="font-semibold text-gray-900 dark:text-white">输入作品信息</span>
                   </div>
                   <div className="space-y-3">
                     <input
@@ -1962,9 +1975,9 @@ function App() {
                       setCurrentStoryDay(1)
                       generateStoryWords(1)
                     }}
-                    className="w-full py-4 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all animate-pulse"
+                    className="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl font-bold text-lg shadow-lg shadow-indigo-200 dark:shadow-indigo-900/30 hover:shadow-xl hover:from-indigo-600 hover:to-purple-700 transition-all active:scale-[0.98]"
                   >
-                    🎬 开始剧情背单词！
+                    ✨ 开始剧情背单词
                   </button>
                 )}
               </div>
@@ -1972,8 +1985,8 @@ function App() {
           ) : storyLoading ? (
             // 加载中
             <div className="h-full flex flex-col items-center justify-center">
-              <div className="w-16 h-16 border-4 border-pink-200 border-t-pink-500 rounded-full animate-spin mb-4" />
-              <p className="text-gray-500 dark:text-gray-400">正在生成剧情...</p>
+              <div className="w-16 h-16 border-4 border-indigo-100 dark:border-indigo-900 border-t-indigo-500 rounded-full animate-spin mb-4" />
+              <p className="text-gray-700 dark:text-gray-300 font-medium">正在生成剧情...</p>
               <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">把单词串进《{artworkTitle}》的故事里</p>
             </div>
           ) : storyWords.length > 0 ? (
@@ -2005,9 +2018,9 @@ function App() {
     <div className="animate-fadeIn">
       {!browseMode ? (
         <div className="space-y-6">
-          <div className="text-center mb-4">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">词库</h2>
-            <p className="text-gray-500 dark:text-gray-400">选择词库浏览单词，或探索词根专题</p>
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">词库</h2>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">选择词库浏览单词，或探索词根专题</p>
           </div>
 
           {/* 功能10: 词根专题入口 */}
@@ -2287,9 +2300,9 @@ function App() {
     <div className="animate-fadeIn">
       {quizState === 'select' && (
         <div className="space-y-6">
-          <div className="text-center mb-4">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">单词测验</h2>
-            <p className="text-gray-500 dark:text-gray-400">选择词库开始测验，每次10道题</p>
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">单词测验</h2>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">选择词库开始测验，每次10道题</p>
           </div>
           <div className="space-y-3">
             {wordbankCategories.flatMap(c => c.wordbanks).map(bank => (
@@ -2613,7 +2626,7 @@ function App() {
     return (
       <div className="animate-fadeIn space-y-6">
         {/* 用户卡片 */}
-        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-xl">
+        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-xl shadow-indigo-200 dark:shadow-indigo-900/30">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-3xl">📚</div>
             <div className="flex-1">
@@ -2721,8 +2734,8 @@ function App() {
   // ==================== 渲染：设置页 ====================
   const renderSettings = () => (
     <div className="animate-fadeIn space-y-6">
-      <div className="text-center mb-4">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">设置</h2>
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">设置</h2>
       </div>
 
       {/* 深色模式 */}
@@ -2788,8 +2801,8 @@ function App() {
 
       {/* 关于 */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 text-center">
-        <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg">
-          <span className="text-white font-bold text-lg">W</span>
+        <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg shadow-indigo-200 dark:shadow-indigo-900/30">
+          <span className="text-white text-lg">✨</span>
         </div>
         <h4 className="font-bold text-gray-900 dark:text-white">WordStory</h4>
         <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">剧情背单词 v2.0</p>
@@ -2799,7 +2812,7 @@ function App() {
 
   // ==================== 主渲染 ====================
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 pb-safe ${activeTab === 'home' ? 'h-screen overflow-hidden' : ''}`}>
+    <div className={`min-h-screen bg-gray-50 dark:bg-gray-950 pb-safe ${activeTab === 'home' ? 'h-screen overflow-hidden' : ''}`}>
       {/* 顶部导航 - 首页时隐藏，使用首页自己的顶部栏 */}
       {activeTab !== 'home' && (
       <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-700 sticky top-0 z-50">
@@ -3142,23 +3155,23 @@ function App() {
 
       {/* 功能2: 底部导航栏 */}
       {step !== 2 && step !== 3 && step !== 4 && (
-        <nav className="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-t border-gray-200 dark:border-gray-700 z-50">
-          <div className="max-w-4xl mx-auto flex items-center justify-around px-2 py-2">
+        <nav className="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-t border-gray-100 dark:border-gray-800 z-50">
+          <div className="max-w-4xl mx-auto flex items-center justify-around px-2 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]">
             {([
-              { key: 'home' as TabType, icon: '🏠', label: '首页' },
-              { key: 'wordbank' as TabType, icon: '📚', label: '词库' },
-              { key: 'quiz' as TabType, icon: '🧪', label: '测验' },
-              // { key: 'membership' as TabType, icon: '👑', label: '会员' }, // 暂时隐藏付费
-              { key: 'profile' as TabType, icon: '📊', label: '我的' },
-              { key: 'settings' as TabType, icon: '⚙️', label: '设置' },
+              { key: 'home' as TabType, icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, label: '首页' },
+              { key: 'wordbank' as TabType, icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>, label: '词库' },
+              { key: 'quiz' as TabType, icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>, label: '测验' },
+              // { key: 'membership' as TabType, icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>, label: '会员' },
+              { key: 'profile' as TabType, icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>, label: '我的' },
+              { key: 'settings' as TabType, icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>, label: '设置' },
             ]).map(tab => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all ${activeTab === tab.key ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}`}
+                className={`flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-2xl transition-all ${activeTab === tab.key ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}`}
               >
-                <span className="text-xl">{tab.icon}</span>
-                <span className="text-xs font-medium">{tab.label}</span>
+                {tab.icon}
+                <span className="text-[10px] font-medium">{tab.label}</span>
               </button>
             ))}
           </div>
