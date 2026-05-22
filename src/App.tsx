@@ -1776,198 +1776,161 @@ function App() {
     }
 
     return (
-      <div className="animate-fadeIn h-full flex flex-col bg-gray-50 dark:bg-gray-900">
+      <div className="animate-fadeIn h-full flex flex-col bg-white dark:bg-gray-950">
         {/* 顶部标题栏 */}
-        <div className="bg-white dark:bg-gray-900 px-5 pt-6 pb-4">
-          <div className="flex items-center justify-between mb-4">
+        <div className="px-5 pt-6 pb-2">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200 dark:shadow-indigo-900/30">
-                <span className="text-white text-lg">✨</span>
+              <div className="w-11 h-11 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-200 dark:shadow-purple-900/40">
+                <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-white" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white">WordStory</h1>
-                <p className="text-xs text-gray-500 dark:text-gray-400">把单词串进你喜欢的故事里</p>
+                <h1 className="text-xl font-extrabold text-gray-900 dark:text-white tracking-tight">WordStory</h1>
+                <p className="text-[11px] text-gray-400 dark:text-gray-500">把单词串进你喜欢的故事里</p>
               </div>
             </div>
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className="p-2.5 bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              className="p-2.5 bg-gray-100 dark:bg-gray-800 rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all active:scale-95"
             >
-              {darkMode ? '☀️' : '🌙'}
+              {darkMode
+                ? <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-amber-500" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                : <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-gray-600 dark:text-gray-400" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              }
             </button>
-          </div>
-          {/* AI驱动学习徽章 */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 rounded-full border border-indigo-100 dark:border-indigo-800/50">
-            <span className="text-xs">✨</span>
-            <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400">AI 驱动学习</span>
           </div>
         </div>
 
         {/* 主要内容区域 */}
         <div className="flex-1 overflow-hidden">
           {storyWords.length === 0 && !storyLoading ? (
-            // 选择引导界面
-            <div className="h-full overflow-y-auto px-6 py-6 pb-24">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">剧情背单词</h2>
-                <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto text-sm">
-                  选择单词来源，输入你喜欢的作品名，我们把单词串进故事里！
-                </p>
-              </div>
-              
-              <div className="w-full max-w-sm mx-auto space-y-4">
-                {/* 步骤1：选择单词来源 */}
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-6 h-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">1</span>
-                    </div>
-                    <span className="font-semibold text-gray-900 dark:text-white">选择单词来源</span>
+            // 选择引导界面 - 全新设计
+            <div className="h-full overflow-y-auto px-5 pt-4 pb-28">
+              <div className="w-full max-w-sm mx-auto space-y-6">
+
+                {/* 作品名输入 - 核心操作提到最前 */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2.5">
+                    输入你喜欢的剧/小说名
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={artworkTitle}
+                      onChange={e => setArtworkTitle(e.target.value)}
+                      placeholder="如：甄嬛传、Harry Potter、权力的游戏..."
+                      className="w-full pl-11 pr-4 py-3.5 bg-gray-50 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-2xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-indigo-400 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 focus:bg-white dark:focus:bg-gray-800 transition-all"
+                    />
+                    <svg viewBox="0 0 24 24" fill="none" className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      onClick={() => setWordSource('bank')}
-                      className={`p-3 rounded-xl text-left transition-all text-sm ${
-                        wordSource === 'bank'
-                          ? 'bg-indigo-100 dark:bg-indigo-900/40 border-2 border-indigo-500'
-                          : 'bg-gray-50 dark:bg-gray-700/50 border-2 border-transparent hover:bg-gray-100 dark:hover:bg-gray-700'
-                      }`}
-                    >
-                      <div className="text-lg mb-1">📚</div>
-                      <div className="font-medium text-gray-900 dark:text-white">从词库选择</div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">四级、六级、雅思...</div>
-                    </button>
-                    <button
-                      onClick={() => setWordSource('random')}
-                      className={`p-3 rounded-xl text-left transition-all text-sm ${
-                        wordSource === 'random'
-                          ? 'bg-indigo-100 dark:bg-indigo-900/40 border-2 border-indigo-500'
-                          : 'bg-gray-50 dark:bg-gray-700/50 border-2 border-transparent hover:bg-gray-100 dark:hover:bg-gray-700'
-                      }`}
-                    >
-                      <div className="text-lg mb-1">🎲</div>
-                      <div className="font-medium text-gray-900 dark:text-white">系统随机</div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">随机从所有词库选词</div>
-                    </button>
-                    <button
-                      onClick={() => setWordSource('manual')}
-                      className={`p-3 rounded-xl text-left transition-all text-sm ${
-                        wordSource === 'manual'
-                          ? 'bg-indigo-100 dark:bg-indigo-900/40 border-2 border-indigo-500'
-                          : 'bg-gray-50 dark:bg-gray-700/50 border-2 border-transparent hover:bg-gray-100 dark:hover:bg-gray-700'
-                      }`}
-                    >
-                      <div className="text-lg mb-1">✏️</div>
-                      <div className="font-medium text-gray-900 dark:text-white">手动输入</div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">输入你想背的单词</div>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setWordSource('photo')
-                        setShowPhotoUpload(true)
-                      }}
-                      className={`p-3 rounded-xl text-left transition-all text-sm ${
-                        wordSource === 'photo'
-                          ? 'bg-indigo-100 dark:bg-indigo-900/40 border-2 border-indigo-500'
-                          : 'bg-gray-50 dark:bg-gray-700/50 border-2 border-transparent hover:bg-gray-100 dark:hover:bg-gray-700'
-                      }`}
-                    >
-                      <div className="text-lg mb-1">📷</div>
-                      <div className="font-medium text-gray-900 dark:text-white">拍照识别</div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">拍照/上传图片识别</div>
-                    </button>
+                  <input
+                    type="text"
+                    value={artworkCharacters}
+                    onChange={e => setArtworkCharacters(e.target.value)}
+                    placeholder="角色名（选填，如：陈路周、徐栀）"
+                    className="w-full mt-2.5 pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-2xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-indigo-400 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 focus:bg-white dark:focus:bg-gray-800 transition-all"
+                  />
+                </div>
+
+                {/* 词库选择 - 横向标签式 */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2.5">词库选择</label>
+                  <div className="flex gap-2 flex-wrap">
+                    {[
+                      { key: 'bank' as const, label: '从词库选择', icon: <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> },
+                      { key: 'random' as const, label: '系统随机', icon: <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg> },
+                      { key: 'manual' as const, label: '手动输入', icon: <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> },
+                      { key: 'photo' as const, label: '拍照识别', icon: <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> },
+                    ].map(opt => (
+                      <button
+                        key={opt.key}
+                        onClick={() => {
+                          if (opt.key === 'photo') {
+                            setWordSource('photo')
+                            setShowPhotoUpload(true)
+                          } else {
+                            setWordSource(opt.key)
+                          }
+                        }}
+                        className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium transition-all ${
+                          wordSource === opt.key
+                            ? 'bg-indigo-500 text-white shadow-md shadow-indigo-200 dark:shadow-indigo-900/40'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 active:scale-95'
+                        }`}
+                      >
+                        {opt.icon}
+                        {opt.label}
+                      </button>
+                    ))}
                   </div>
 
-                  {/* 单词数量选择 - 仅词库选择和系统随机模式显示 */}
-                  {(wordSource === 'bank' || wordSource === 'random') && (
-                  <div className="mt-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">📝 生成单词数量</span>
-                    </div>
-                    <div className="flex gap-2">
-                      {[10, 20, 30].map(num => (
-                        <button
-                          key={num}
-                          onClick={() => setWordsPerDay(num)}
-                          className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all ${
-                            wordsPerDay === num
-                              ? 'bg-indigo-500 text-white shadow-md'
-                              : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                          }`}
-                        >
-                          {num} 个
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  )}
-
-                  {/* 根据选择的来源显示额外操作 */}
+                  {/* 词库选择后的子选项 */}
                   {wordSource === 'bank' && (
-                    <button
-                      onClick={() => setShowWordbankSelector(true)}
-                      className={`w-full mt-3 p-3 rounded-xl text-left transition-all text-sm ${
-                        selectedWordbankForStory
-                          ? 'bg-green-100 dark:bg-green-900/30 border-2 border-green-500'
-                          : 'bg-gray-50 dark:bg-gray-700/50 border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-indigo-400'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span>{selectedWordbankForStory ? '✅' : '👉'}</span>
-                        <div>
-                          <div className="font-medium text-gray-900 dark:text-white">
+                    <div className="mt-3">
+                      <button
+                        onClick={() => setShowWordbankSelector(true)}
+                        className={`w-full flex items-center justify-between p-3.5 rounded-xl transition-all ${
+                          selectedWordbankForStory
+                            ? 'bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800'
+                            : 'bg-gray-50 dark:bg-gray-800/80 border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${selectedWordbankForStory ? 'bg-indigo-100 dark:bg-indigo-800/50' : 'bg-gray-200 dark:bg-gray-700'}`}>
+                            {selectedWordbankForStory
+                              ? <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4 text-indigo-600 dark:text-indigo-400" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                              : <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4 text-gray-400" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            }
+                          </div>
+                          <span className={`text-sm font-medium ${selectedWordbankForStory ? 'text-indigo-700 dark:text-indigo-300' : 'text-gray-500 dark:text-gray-400'}`}>
                             {selectedWordbankForStory
                               ? wordbankCategories.flatMap(c => c.wordbanks).find(b => b.id === selectedWordbankForStory)?.name || '已选择'
                               : '点击选择词库'
                             }
-                          </div>
-                          {selectedWordbankForStory && (
-                            <div className="text-xs text-gray-500 dark:text-gray-400">
-                              {wordbankCategories.flatMap(c => c.wordbanks).find(b => b.id === selectedWordbankForStory)?.count || 0} 个单词
-                            </div>
-                          )}
+                          </span>
                         </div>
-                      </div>
-                    </button>
+                        {selectedWordbankForStory && (
+                          <span className="text-xs text-indigo-500 dark:text-indigo-400">
+                            {wordbankCategories.flatMap(c => c.wordbanks).find(b => b.id === selectedWordbankForStory)?.count || 0} 词
+                          </span>
+                        )}
+                      </button>
+                    </div>
                   )}
 
                   {wordSource === 'manual' && (
                     <textarea
                       value={customWords}
                       onChange={e => setCustomWords(e.target.value)}
-                      placeholder="输入你想背的单词，用逗号或换行分隔&#10;例如：abandon, absolute, abstract..."
-                      className="w-full mt-3 p-3 bg-gray-50 dark:bg-gray-700/50 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-sm resize-none focus:border-indigo-400 focus:outline-none transition-colors"
+                      placeholder="输入单词，用逗号或换行分隔&#10;例如：abandon, absolute, abstract..."
+                      className="w-full mt-3 p-3.5 bg-gray-50 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-2xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 resize-none focus:border-indigo-400 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 transition-all"
                       rows={3}
                     />
                   )}
                 </div>
-                
-                {/* 步骤2：输入作品信息 */}
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-6 h-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">2</span>
+
+                {/* 单词数量 */}
+                {(wordSource === 'bank' || wordSource === 'random') && (
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2.5">生成数量</label>
+                    <div className="flex gap-2">
+                      {[10, 20, 30].map(num => (
+                        <button
+                          key={num}
+                          onClick={() => setWordsPerDay(num)}
+                          className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                            wordsPerDay === num
+                              ? 'bg-indigo-500 text-white shadow-md shadow-indigo-200 dark:shadow-indigo-900/40'
+                              : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 active:scale-95'
+                          }`}
+                        >
+                          {num} 词
+                        </button>
+                      ))}
                     </div>
-                    <span className="font-semibold text-gray-900 dark:text-white">输入作品信息</span>
                   </div>
-                  <div className="space-y-3">
-                    <input
-                      type="text"
-                      value={artworkTitle}
-                      onChange={e => setArtworkTitle(e.target.value)}
-                      placeholder="例如：陷入我们的热恋、哈利波特、甄嬛传..."
-                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:border-indigo-400 focus:outline-none transition-colors"
-                    />
-                    <input
-                      type="text"
-                      value={artworkCharacters}
-                      onChange={e => setArtworkCharacters(e.target.value)}
-                      placeholder="例如：陈路周、徐栀（不填则随机生成）"
-                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:border-indigo-400 focus:outline-none transition-colors"
-                    />
-                  </div>
-                </div>
-                
+                )}
+
                 {/* 开始按钮 */}
                 {isStep1Done && artworkTitle.trim() && (
                   <button
@@ -1975,19 +1938,29 @@ function App() {
                       setCurrentStoryDay(1)
                       generateStoryWords(1)
                     }}
-                    className="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl font-bold text-lg shadow-lg shadow-indigo-200 dark:shadow-indigo-900/30 hover:shadow-xl hover:from-indigo-600 hover:to-purple-700 transition-all active:scale-[0.98]"
+                    className="w-full py-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-2xl font-bold text-base shadow-lg shadow-purple-200 dark:shadow-purple-900/40 hover:shadow-xl transition-all active:scale-[0.97] flex items-center justify-center gap-2"
                   >
-                    ✨ 开始剧情背单词
+                    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    开始剧情背单词
                   </button>
                 )}
+
+                {/* 底部留白 */}
+                <div className="h-4" />
               </div>
             </div>
           ) : storyLoading ? (
             // 加载中
-            <div className="h-full flex flex-col items-center justify-center">
-              <div className="w-16 h-16 border-4 border-indigo-100 dark:border-indigo-900 border-t-indigo-500 rounded-full animate-spin mb-4" />
-              <p className="text-gray-700 dark:text-gray-300 font-medium">正在生成剧情...</p>
-              <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">把单词串进《{artworkTitle}》的故事里</p>
+            <div className="h-full flex flex-col items-center justify-center bg-white dark:bg-gray-950">
+              <div className="relative mb-6">
+                <div className="w-20 h-20 border-[3px] border-gray-100 dark:border-gray-800 rounded-full" />
+                <div className="w-20 h-20 border-[3px] border-indigo-500 border-t-transparent rounded-full animate-spin absolute top-0 left-0" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <svg viewBox="0 0 24 24" fill="none" className="w-8 h-8 text-indigo-500" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                </div>
+              </div>
+              <p className="text-gray-800 dark:text-gray-200 font-semibold text-lg">正在生成剧情...</p>
+              <p className="text-sm text-gray-400 dark:text-gray-500 mt-1.5">把单词串进《{artworkTitle}》的故事里</p>
             </div>
           ) : storyWords.length > 0 ? (
             // 剧情单词卡片
@@ -1998,7 +1971,7 @@ function App() {
               <p className="text-gray-500 dark:text-gray-400">点击下方按钮开始学习</p>
               <button
                 onClick={() => generateStoryWords(1)}
-                className="mt-4 px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl font-medium"
+                className="mt-4 px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-medium"
               >
                 开始学习
               </button>
