@@ -2779,6 +2779,13 @@ function App() {
         </div>
         <h4 className="font-bold text-gray-900 dark:text-white">WordStory</h4>
         <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">剧情背单词 v2.0</p>
+        <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+          <p className="text-xs text-gray-400 dark:text-gray-500">
+            <span id="busuanzi_container_site_pv">访问量 <span id="busuanzi_value_site_pv"></span></span>
+            <span className="mx-2">·</span>
+            <span id="busuanzi_container_site_uv">访客数 <span id="busuanzi_value_site_uv"></span></span>
+          </p>
+        </div>
       </div>
     </div>
   )
